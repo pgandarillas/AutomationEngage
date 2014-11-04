@@ -2,11 +2,12 @@ require 'capybara/rspec'
 class MainPage < SitePrism::Page
   set_url $url_login
 
-  ###SigIn Elements###
+  ###Sig In Elements###
   element :username_field_login, '#j_username'
   element :password_field_login, '#j_password'
   element :reset_user_link, :xpath, '//*[@id="loginForm"]/div[1]/a'
   element :reset_password_link, :xpath, '//*[@id="loginForm"]/div[2]/a'
+  element :reset_username_link, :xpath, "//*[@id='loginForm']/div[1]/a"
   element :logo_link, :xpath, '//*[@id="logo"]/a/img'
   element :activity_link, :xpath, '//*[@id="navWrap"]/nav/div/ul/li[1]/a'
   element :postidea_link, :xpath, '//*[@id="navWrap"]/nav/div/ul/li[2]/a'
@@ -19,9 +20,37 @@ class MainPage < SitePrism::Page
   element :signin_button, :xpath, '//*[@id="loginForm"]/div[4]/div/a/span/strong'
   element :signout_link, :xpath, "//a[@href='/User/Logout']"
   element :incorrectusernamepassword_text, :xpath, "//*[contains(text(),'The username or password you entered is incorrect.')]"
-  element :sitethemesandaccesssettings_link, :xpath, '//*[@id="contents"]/div/div[2]/table/tbody/tr[6]/td/div[1]/a'
   element :rememberusername_checkbox, :xpath, '//*[@id="remember_username"]'
+  element :forgotusername_text, :xpath, "//*[text()='Forgot Username']"
+  element :forgotusernamecancel_button, :xpath, "//*[@id='resetRequestForm']/div[3]/div[2]/a/span"
+  element :signinthirdparty_text, :xpath, "//*[text()='Sign in with other accounts?']"
+  element :yammersignin_button, :xpath, "//a/img[@title='Sign in with Yammer']"
+  element :forgotusernamemail_field, :xpath, "//*[@id='resetRequestForm']/div[2]/input"
+  element :forgotusernamerequestsent_text, :xpath, "//h1[text()='Request Sent!']"
+  element :returntosignin_link, :xpath, "//a[text()='Return to sign in']"
+  @@forgotusername_text = '//*[@id="resetRequestForm"]/h1'
+  @@theemailaddressyouenteredisnotvalidpleasetryagain = '/html/body/div[1]/div'
+  @@pleaseenteryouremailaddresstocontinue = '//*[@id="resetRequestForm"]/div[1]'
+  @@submit_button = '//*[@id="resetRequestForm"]/div[3]/div[1]/a/span'
+  @@cancel_button = '//*[@id="resetRequestForm"]/div[3]/div[2]/a/span'
+  @@requestsent_text = '/html/body/div[2]/h1'
+  @@passwordsdonotmatch = '/html/body/div[1]/div'
+  @@resetpassword_text = '//*[@id="resetRequestForm"]/div[1]/h1'
+  @@usernameRequestLink = ""
 
+  ###CreateCommunity Elements###
+  # element :admin_page, :xpath, "//a[contains(text(),'Administration')]"
+  element :create_community_option, :xpath, ".//*[@id='contents']/div/div[2]/table/tbody/tr[12]/td/div[1]/a"
+  element :community_URL, :xpath, ".//*[@id='subdomain']"
+  element :expand_combobox, :xpath, ".//*[@id='siteaccess']"
+  element :requiredlogin_option, :xpath, "//*[@id='siteaccess']/option[2]"
+  element :nextbutton_a, :xpath, "//form[@id='createCommWidgetFormStep1']/div/a/span/strong"
+  element :community_title, :xpath, "//*[@id='pagetitle']"
+  element :select_theme, :xpath, "//*[@id='defaultVisualThemeArea']/div/div[2]/input"
+  element :nextbutton_b, :xpath, "//*[@id='createCommWidgetFormStep2']/div[4]/a/span/strong"
+  element :nextbutton_c, :xpath, "//*[@id='createCommWidgetFormStep3']/div[4]/a/span/strong"
+  element :continuebutton, :xpath, "//*[@id='createCommWidgetFormStep5']/a/span"
+  @@random_commname = ("comm1"+rand(1..15).to_s)
 
   ###Challenges Elements###
   element :new_challenge_link, :xpath, "//*[@id='site_challenge_lists']/div[3]/span[4]/a"
@@ -41,8 +70,23 @@ class MainPage < SitePrism::Page
 
   ###TestEmail Elements
   #element :username_reset, :xpath, '//*[@id="resetRequestForm"]/div[2]/input'
-  element :submit_forgotuser_button, :xpath, '//*[@id="resetRequestForm"]/div[2]/div[1]/a/span'
+  element :submit_forgotuser_button, :xpath, "//*[@id='resetRequestForm']/div[3]/div[1]/a/span"
+  element :submit_forgotpassword_button, :xpath, '//*[@id="resetRequestForm"]/div[2]/div[1]/a/span'
   element :username_reset, "#resetRequestForm > div.reset-password-container > div.form-element > input"
+  element :password_reset, "#resetRequestForm > div:nth-child(3) > input"
+  element :cancel_forgotuser_button, :xpath, ".//span[text() = 'Cancel']"
+  element :forgotpassword_label, :xpath, ".//div[@class='reset-password-container']/h1"
+  element :enterusertoresetpass_label, :xpath, ".//div[@class='reset-password-container']/div[text()='Please enter your username to reset your password.']"
+  element :requestsent_label, :xpath, ".//h1[text()='Request Sent!']"
+  element :followinstructionsonemail_label, :xpath, ".//div[@class='message-heading']"
+  element :usernamenotvalid_label, :xpath, ".//div[text()='The username you entered is not valid. Please try again.']"
+  element :usernameinvalidcharacter_label, :xpath, ".//div[text()='Your username contains invalid characters. Please use letters, numbers, @ symbol, underscore, hyphen, and period.']"
+
+  ###Profile###
+  element :myprofile_link, :xpath, ".//a[@href='/Page/MyProfile']"
+  element :editprofile_button, :xpath, ".//a[@title='Edit Profile']/span"
+  element :updateprofile_button, :xpath, ".//form[@id='updateprofile']/descendant::a[@title='Update']/span"
+  element :updateprofilesuccess_label, :xpath, ".//div[@id='successMessage']"
 
   ###Users Page variables
   element :users_link, :xpath, "//*[@id='contents']/div/div[2]/table/tbody/tr[3]/td/div[1]/a"
@@ -55,6 +99,7 @@ class MainPage < SitePrism::Page
   element :sendemail_checkbox, :xpath, "//*[@id='sendemail']"
   element :adduser_button, :xpath, "//*[@id='user_admin_fresh']/div[6]/div/a/span"
   element :submit_button, :xpath, "//*[@id='AdminAddUser']/table/tbody/tr[8]/td[2]/a/span"
+  element :submitresetpassword_button, :xpath, '//*[@id="resetRequestForm"]/div[2]/div[1]/a/span'
   element :usercreated_text, :xpath, "//div[contains(@label, 'has been created.')]/a/h2"
 
   ###User Experience Management variables
@@ -83,7 +128,7 @@ class MainPage < SitePrism::Page
   element :showusernickname, :xpath, "//*[@id='config-single-com.spigit.config.DisplayConfig.showUserNickNameForFirstName']"
   element :shownotificationpreferences, :xpath, "//*[@id='config-single-com.spigit.config.DisplayConfig.enableEmailNotificationPreferences']"
   element :enableyammerlogin, :xpath, "//*[@id='config-single-com.spigit.config.DisplayConfig.enableYammerLogin']"
-  element :userexperiencesubmit_button, :xpath, "//*[@id='configTbl']/tbody/tr[39]/td[2]/div/a[1]/span"
+  element :userexperiencesubmit_button, :xpath, "//a[@title='Submit']"
   element :userexperiencerestore_button, :xpath, "//*[@id='configTbl']/tbody/tr[39]/td[2]/div/a[2]/span"
 
   ###Idea Management variables
@@ -129,7 +174,8 @@ class MainPage < SitePrism::Page
   element :resetloginlock_checkbox, :xpath, ".//*[@id='config-single-com.spigit.user.UserConfig.loginLockResetWithPassword']"
   element :lockoutmessage_textfield, :xpath, ".//*[@id='config-single-com.spigit.user.UserConfig.lockoutTooManyAttemptsMsg']"
   element :passwordexpired_checkbox, :xpath, ".//*[@id='config-single-com.spigit.user.UserConfig.passwordPolicyExpiresOnFirstLogin']"
-  element :passwordexpirationfrequency_textfield, :xpath, ".//*[@id='config-single-com.spigit.user.UserConfig.passwordPolicyExpirationFrequency']"
+  element :passwordexpirationfrequency_textfield, :xpath, '//*[@id="resetRequestForm"]/div[1]/div[3]/input'
+  element :enterpasswordagain_textfield, :xpath, '//*[@id="resetRequestForm"]/div[1]/div[3]/input'
   element :addauthenticatorclass_button, :xpath, ".//*[@id='add-array-element-config-single-com.spigit.user.UserConfig.userAuthenticatorClasses']"
   element :addipaddress_button, :xpath, ".//a[@id='add-array-element-config-single-com.spigit.user.UserConfig.restrictedIPAccessForAdmin']"
   element :userswhitelist_textarea, :xpath, ".//textarea[@id='config-single-com.spigit.user.UserConfig.usersWhiteList']"
@@ -139,6 +185,19 @@ class MainPage < SitePrism::Page
   element :submitsecuritysettings_button, :xpath, ".//table[@id='configTbl']/descendant::span[text()='Submit']"
   element :restoredefaultsecuritysettings_button, :xpath, ".//table[@id='configTbl']/descendant::span[text()='Restore Defaults']"
   element :settingsappliedmessage_popup, :xpath, ".//div[@id='themeContainer']/div[text()='All settings applied. ' AND @style='display: block;']"
+
+  ###Site Themes and Access Settings Page variables
+  element :sitethemesandaccesssettings_link, :xpath, '//*[@id="contents"]/div/div[2]/table/tbody/tr[6]/td/div[1]/a'
+  element :communityaccesupdate_button, :xpath, "//a[@value='Update']"
+  @@communityaccess_combobox = 'siteaccess'
+  @@reputationoption_combobox = ""
+
+
+  def setPageUrl (url)
+    self.class.set_url url
+    self.load
+  end
+
   def click_specific_link(link)
     case link
       when "Activity" then
@@ -159,38 +218,79 @@ class MainPage < SitePrism::Page
         challenge_link.click
       when "SpigitLogo" then
         logo_link.click
+
       when "Users" then
         users_link.click
       when "User Experience Management" then
         userexperience_link.click
       when "Idea Management" then
         ideamanagement_link.click
+
       when "New Challenge" then
         new_challenge_link.click
+
       when "Forgot your user name?" then
         reset_user_link.click
       when "Forgot your password?" then
         reset_password_link.click
+      when "Forgot your username?" then
+        reset_username_link.click
+      when "Return to sign in" then
+        returntosignin_link.click
+
       when "Sign-Out" then
         signout_link.click
+
       when "Security" then
         security_link.click
+
       when "Site Themes and Access Settings" then
         sitethemesandaccesssettings_link.click
+      when "Create Community" then
+        create_community_option.click
+        sitethemesandaccesssettings_link.click
+      when "My Username" then
+        myprofile_link.click
       else
         puts "'#{link}' link doesn't exist."
     end
     sleep 3
   end
 
+  ### Create Community fields ###
+  def fill_url()
+    community_URL.click
+    community_URL.set(@@random_commname)
+  end
+
+  def selectaccess_combobox(click)
+    case click
+      when "Community Access"
+        expand_combobox.click
+      when "Access"
+        requiredlogin_option.click
+    end
+  end
+
+  def fill_commtitle()
+    community_title.set(@@random_commname)
+  end
+
+  def visualtheme_radiobutton()
+    select_theme.click
+  end
+
   def fill_value(field, value)
     case field
+      ###Sign In fields###
       when 'Username'
         @mainpage = MainPage.new
         @mainpage.username value
       when 'Password'
         @mainpage = MainPage.new
         @mainpage.password value
+      when "Forgot Username Email"
+        forgotusernamemail_field.set value
 
       ###Users fields###
       when "new Username" then
@@ -238,6 +338,8 @@ class MainPage < SitePrism::Page
         challenge_description.set value
       when "Forgot Password" then
         username_reset.set value
+      when "Forgot Username" then
+        password_reset.set value
 
       ###Security Page fields###
       when "Allow Login Attempts" then
@@ -248,7 +350,8 @@ class MainPage < SitePrism::Page
         lockoutmessage_textfield.set value
       when "Password Expiration Frequency" then
         passwordexpirationfrequency_textfield.set value
-
+      when "Enter Password Again" then
+        enterpasswordagain_textfield.set value
       else
         puts "'#{field}' field doesn't exist."
     end
@@ -262,6 +365,18 @@ class MainPage < SitePrism::Page
         adduser_button.click
       when "Submit" then
         submit_button.click
+      when "Submit Reset Password" then
+        submitresetpassword_button.click
+
+      ###Create Community buttons###
+      when "Next A" then
+        nextbutton_a.click
+      when "Next B" then
+        nextbutton_b.click
+      when "Next C" then
+        nextbutton_c.click
+      when "Continue" then
+        continuebutton.click
 
       ###User Experience Management buttons###
       when "User Experience Management Submit" then
@@ -277,10 +392,22 @@ class MainPage < SitePrism::Page
       when "Idea Management Add New" then
         addstage_button.click
 
+      ###Sign In buttons###
       when "Sign In" then
         signin_button.click
       when "Submit Forgot Username" then
         submit_forgotuser_button.click
+      when "Forgot Username Cancel" then
+        forgotusernamecancel_button.click
+      when "Submit Forgot Password" then
+        submit_forgotpassword_button.click
+      when "Cancel Forgot Username" then
+        cancel_forgotuser_button.click
+
+      when "Edit Profile" then
+        editprofile_button.click
+      when "Update Profile" then
+        updateprofile_button.click
 
       ###Security Page buttons###
       when "Submit Security Settings" then
@@ -288,6 +415,9 @@ class MainPage < SitePrism::Page
       when "Restore Default Security Settings" then
         restoredefaultsecuritysettings_button.click
 
+      ###Site Themes and Access Settings Update buttons###
+      when "Site Themes and Access Settings Update" then
+        communityaccesupdate_button.click
       else
         puts "'#{button}' button doesn't exist."
     end
@@ -392,15 +522,15 @@ class MainPage < SitePrism::Page
   end
 
   def select_an_option(field, value)
-    case
-      when field == 'Reputation Policy'
+    case field
+      when "Reputation Policy"
         select(value, :from => @@reputationoption_combobox)
-      when field == 'Start Time'
-        select(value, :from => @@reputationoption_combobox)
+      when "Community Access"
+        select(value, :from => @@communityaccess_combobox)
       else
-        puts "Don't exists this option."
+        puts "'#{value}' option doesn't exist."
     end
-    sleep(5)
+    sleep 5
   end
 
   def verifyElementExists(element)
@@ -413,6 +543,62 @@ class MainPage < SitePrism::Page
         if has_no_incorrectusernamepassword_text?
           fail(ArgumentError.new('NO USERNAME/PASSWORD VALIDATION MESSAGE IS DISPLAYED!'))
         end
+      when "Forgot Username" then
+        if has_no_forgotusername_text?
+          fail(ArgumentError.new('THE FORGOT USERNAME PAGE IS NOT DISPLAYED!'))
+        end
+      when "Sign in with other accounts?" then
+        if has_no_signinthirdparty_text?
+          fail(ArgumentError.new('THE SIGN IN WITH 3RD PARTY ACCOUNT IS NOT DISPLAYED!'))
+        end
+      when "Yammer Sign In" then
+        if has_no_yammersignin_button?
+          fail(ArgumentError.new('THE YAMMER SIGN IN BUTTON IS NOT DISPLAYED!'))
+        end
+      when "Request Sent" then
+        if has_no_forgotusernamerequestsent_text?
+          fail(ArgumentError.new('THE FORGOT USERNAME REQUEST SENT! MESSAGE IS NOT DISPLAYED!'))
+        end
+      when "The username you entered is not valid. Please try again."
+        if has_no_usernamenotvalid_label?
+          if has_no_usernameinvalidcharacter_label?
+            fail(ArgumentError.new('NO INVALID USERNAME MESSAGE IS DISPLAYED!'))
+          end
+        end
+      when "Forgot Password Label"
+        if has_no_forgotpassword_label?
+          fail(ArgumentError.new('NO FORGOT PASSWORD LABEL IS DISPLAYED!'))
+        end
+      when "Please enter your username to reset your password."
+        if has_no_enterusertoresetpass_label?
+          fail(ArgumentError.new('NO ENTER USERNAME TO RESET PASSWORD MESSAGE IS DISPLAYED!'))
+        end
+      when "Username Field"
+        if has_no_username_reset?
+          fail(ArgumentError.new('NO USERNAME FIELD IS DISPLAYED!'))
+        end
+      when "Submit"
+        if has_no_submit_forgotuser_button?
+          fail(ArgumentError.new('NO SUBMIT BUTTON IS DISPLAYED!'))
+        end
+      when "Cancel"
+        if has_no_cancel_forgotuser_button?
+          fail(ArgumentError.new('NO CANCEL BUTTON IS DISPLAYED!'))
+        end
+      when "Request Sent"
+        if has_no_requestsent_label?
+          fail(ArgumentError.new('NO REQUEST SENT MESSAGE IS DISPLAYED!'))
+        end
+      when "Follow Instructions on Email"
+        if has_no_followinstructionsonemail_label?
+          fail(ArgumentError.new('NO FOLLOW INSTRUCTIONS ON EMAIL SENT MESSAGE IS DISPLAYED!'))
+        end
+      when "Update Profile Success" then
+        if has_no_updateprofilesuccess_label?
+          fail(ArgumentError.new('NO UPDATE PROFILE SUCCESS MESSAGE WAS DISPLAYED'))
+        end
+      else
+        puts element.to_s + "Don't exists this option."
     end
   end
 
@@ -596,6 +782,119 @@ class MainPage < SitePrism::Page
     $result = has_field?(field, :with => value)
     puts $result
     return $result
+  end
+
+  def verifymessage(message)
+    case message
+      when "Request Sent!" then
+        $result = page.has_xpath?(@@requestsent_text, :text => message)
+        puts $result
+        sleep(5)
+        return $result
+      when "Reset Password" then
+        $result = page.has_xpath?(@@resetpassword_text, :text => message)
+        puts $result
+        sleep(5)
+        return $result
+      when "Forgot Username" then
+        $result = page.has_xpath?(@@forgotusername_text, :text => message)
+        puts $result
+        sleep(5)
+        return $result
+      when "The email address you entered is not valid. Please try again" then
+        $result = page.has_xpath?(@@theemailaddressyouenteredisnotvalidpleasetryagain, :text => message)
+        puts $result
+        sleep(5)
+        return $result
+      when "Please enter your email address to continue." then
+        $result = page.has_xpath?(@@pleaseenteryouremailaddresstocontinue, :text => message)
+        puts $result
+        sleep(5)
+        return $result
+      when "Passwords do not match." then
+        $result = page.has_xpath?(@@passwordsdonotmatch, :text => message)
+        puts $result
+        sleep(5)
+        return $result
+      else
+        "The '#{message}'was not found."
+    end
+  end
+
+  def verifyfieldexists(field, content)
+    case field
+      when "Email" then
+        $result = page.has_field?('email', :with => content)
+        puts $result
+        sleep(5)
+        return $result
+      else
+        "The '#{field}'was not found."
+    end
+  end
+
+  def verifybuttonexists(name)
+    case name
+      when "Submit" then
+        $result = page.has_selector?(:xpath, @@submit_button)
+        puts $result
+        sleep(5)
+        return $result
+      when "Cancel" then
+        $result = page.has_selector?(:xpath, @@cancel_button)
+        puts $result
+        sleep(5)
+        return $result
+      else
+        "The '#{name}'was not found."
+    end
+  end
+
+  def getCountResetPasswordEmailReceived(useraccount, password)
+    links = Array.new
+
+    Gmail.connect(useraccount, password) do |gmail|
+      gmail.inbox.find(:unread,:subject => 'Reset Password Request').each do |email|
+        $startString = '<strong>Reset password link</strong>: '
+        $endString = '</p>'
+        $start = email.body.to_s.index($startString) + $startString.length
+        $end = email.body.to_s.index($endString, $start)
+        $linkLength = $end-$start
+        $link = email.body.to_s.slice($start, $linkLength)
+        links.push $link
+      end
+      puts $last_link
+      return links.length
+    end
+  end
+
+  ###Sign In: method to get the "Click hete to sign in" link
+  def getUsernameRequestEmailLink(email, psw)
+    links = Array.new
+    Gmail.connect(email, psw) do |gmail|
+      gmail.inbox.find(:subject => 'Username Request').each do |email|
+        startString = '<a href="'
+        endString = '">Click here to sign in'
+        posstart = email.body.to_s.index(startString) + startString.length
+        posend = email.body.to_s.index(endString, posstart)
+        linkLength = posend - posstart
+        link = email.body.to_s.slice(posstart, linkLength)
+        links.push link
+      end
+
+      last_link = links.last()
+      #Launching the URL from the email
+      last_link = last_link.gsub('amp', '')
+      last_link = last_link.gsub(';', '')
+      puts "Last Link:   "+ last_link + "\r"
+      @@usernameRequestLink = last_link
+    end
+  end
+
+  ###Sign In: method that opens the "Click here to sign in" url
+  def openUsernameRequestLink
+    page.visit(@@usernameRequestLink)
+    sleep 3
   end
 
 end
